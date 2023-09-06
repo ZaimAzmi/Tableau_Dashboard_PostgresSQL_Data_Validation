@@ -1,2 +1,2 @@
 # zaim_portfolio
-Data Analystic Projects
+Data Analytics Projects
