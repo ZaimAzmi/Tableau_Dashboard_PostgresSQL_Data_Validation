@@ -4,9 +4,9 @@
 
 **Data Validation**
 Purpose:
-For assessing and ensuring the quality, accuracy, and reliability of data of this Tableau Dashboard
-Tools:
-PG Admin will be used in this data validation.
-Description:
-The figure in the dashboard is compared with the number that is run in the SQL queries.
+\nFor assessing and ensuring the quality, accuracy, and reliability of data of this Tableau Dashboard
+\nTools:
+\nPG Admin will be used in this data validation.
+\nDescription:
+\nThe figure in the dashboard is compared with the number that is run in the SQL queries.
 
