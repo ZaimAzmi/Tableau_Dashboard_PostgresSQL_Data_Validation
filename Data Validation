@@ -1,0 +1,67 @@
+SELECT *FROM hrdata
+
+--1. KPI- Employee Count 
+SELECT sum(employee_count) from hrdata
+
+--2. KPI- Attrition Count 
+SELECT count(attrition) FROM hrdata WHERE attrition = 'Yes'
+
+--3. KPI- Attrition Rate 
+SELECT round(((SELECT count(attrition) FROM hrdata
+WHERE attrition_label = 'Yes') /
+SUM(employee_count))*100,2) from hrdata
+
+--4. KPI- Active Employee 
+SELECT (SUM(employee_count) - (SELECT COUNT(attrition_label) from hrdata WHERE attrition_label ='Yes'))AS active_employee
+FROM hrdata
+
+--5. KPI- Average Age 
+SELECT round(avg(age),0) as avg_age from hrdata
+
+--6. Attrition by Gender 
+SELECT gender, count(attrition_label) from hrdata 
+WHERE attrition_label = 'Yes'
+group by gender
+
+--7. Department wise Attrition 
+SELECT department, COUNT(attrition_label) AS total_attrition,
+ROUND((CAST(COUNT(attrition_label) AS numeric)/	
+ 	(SELECT COUNT(attrition_label) FROM hrdata WHERE attrition_label = 'Yes' AND gender = 'Female')) * 100,2) AS attrition_percentage
+FROM hrdata
+WHERE attrition_label = 'Yes' AND gender = 'Female'
+GROUP BY department
+ORDER BY COUNT(attrition_label) DESC
+
+--8. No of Employee by Age Group 
+SELECT age,
+SUM(employee_count) FROM hrdata
+GROUP BY age
+ORDER BY age
+
+--9. Education Field wise Attrition 
+SELECT education_field,
+COUNT(attrition_label)
+FROM hrdata
+WHERE attrition_label = 'Yes'
+GROUP BY education_field
+ORDER BY COUNT(attrition_label) DESC
+
+--10. Attrition Rate by Gender for different Age group 
+SELECT age_band, gender,
+COUNT(attrition_label),
+ROUND((CAST(COUNT(attrition_label)AS numeric)/
+	(SELECT COUNT(attrition_label) FROM hrdata WHERE attrition_label = 'Yes'))*100,2) AS Percentage
+FROM hrdata
+WHERE attrition_label = 'Yes'
+GROUP BY age_band , gender
+ORDER BY age_band , gender
+
+--11. Job Satisfaction Rating 
+SELECT * 
+FROM crosstab(
+	'SELECT job_role, job_satisfaction, sum(employee_count)
+	FROM hrdata
+	GROUP BY job_role, job_satisfaction
+	ORDER BY job_role, job_satisfaction'
+	)AS ct(job_role varchar(50), one numeric,two numeric, three numeric, four numeric)
+ORDER BY job_role;
